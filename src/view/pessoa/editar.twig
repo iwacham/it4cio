@@ -1,0 +1,59 @@
+{% extends 'template.twig' %}
+
+{% block content %}
+    <div class="container">
+        <h4>Editar Pessoa</h4>
+        <div class="row">
+            <div class="input-field col s4">
+                <input id="nome" type="text" value="{{ pessoa.p_nome }}" class="validate" />
+                <input id="codigo" type="hidden" value="{{ pessoa.p_codigo }}" class="validate" />
+                <label for="nome">Nome</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="data-nascimento" type="date" value="{{ pessoa.p_nascimento }}" class="validate" />
+                <label for="data-nascimento">Data de nascimento</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="email" type="text" value="{{ pessoa.p_email }}" class="validate" />
+                <label for="email">Email</label>
+            </div>
+            <div class="col s12">
+                <button id="save-pessoa" class="btn btn-large green waves-effect">Atualizar</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block customjs %}
+    <script>
+        $(document).ready(function(){
+            $('#save-pessoa').click(function () {
+                var nome = $('#nome').val();
+                var email = $('#email').val();
+                var dataNascimento = $('#data-nascimento').val();
+                var codigo = $('#codigo').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/it4cio/Pessoa/Update',
+                    data: {
+                        nome: nome,
+                        email: email,
+                        dataNascimento: dataNascimento,
+                        codigo: codigo
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if(data.code == 200){
+                            console.log(data);
+                            M.toast({html: data.msg});
+                        }else{
+                            console.log(data);
+                            M.toast({html: data.msg});
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+{% endblock %}

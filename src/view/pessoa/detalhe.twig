@@ -1,0 +1,112 @@
+{% extends 'template.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h2 class="center">Pessoa</h2>
+            <br />
+            <div class="col s12 l4">{{ pessoa.p_nome }}</div>
+            <div class="col s12 l4">{{ pessoa.p_email }}</div>
+            <div class="col s12 l4">{{ pessoa.p_nascimento }}</div>
+        </div>
+        <div class="row">
+            <h2 class="center">Dependentes</h2>
+            <a class="waves-effect btn green modal-trigger" href="#modal1">Adicionar</a>
+            <table class="responsive-table highlight">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Relacionamento</th>
+                    <th>Data Nascimento</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for dependente in dependentes %}
+                    <tr>
+                        <td>{{ dependente.nome }}</td>
+                        {% if dependente.fk_relacao == 1 %}
+                            <td>Conjuge</td>
+                        {% endif %}
+                        {% if dependente.fk_relacao == 2 %}
+                            <td>Filho</td>
+                        {% endif %}
+                        {% if dependente.fk_relacao == 3 %}
+                            <td>Secretária</td>
+                        {% endif %}
+                        <td>{{ dependente.data_nascimento }}</td>
+                        <td>
+                            <a href="/it4cio/Dependente/Excluir/{{ dependente.codigo }}/{{ pessoa.p_codigo }}" class="btn red waves-effect">Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal" style="min-height: 400px;">
+        <div class="modal-content">
+            <h4>Adicionar Dependente</h4>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="nome" type="text" class="validate" />
+                    <input id="fk-pessoa" type="hidden" value="{{ pessoa.p_codigo }}" class="validate" />
+                    <label for="nome">Nome</label>
+                </div>
+                <div class="input-field col s4">
+                    <input id="data-nascimento" type="date" class="validate" />
+                    <label for="data-nascimento">Data de nascimento</label>
+                </div>
+                <div class="input-field col s4">
+                    <select id="relacionamento">
+                        <option value="0" disabled selected>Selecione o relacionamento</option>
+                        <option value="1">Conjuge</option>
+                        <option value="2">Filho</option>
+                        <option value="3">Secretária</option>
+                    </select>
+                    <label>Materialize Select</label>
+                </div>
+                <div class="col s12">
+                    <button id="save-dependente" class="btn btn-large green waves-effect">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block customjs %}
+    <script>
+        $(document).ready(function(){
+            $('#save-dependente').click(function () {
+                var nome = $('#nome').val();
+                var fkPessoa = $('#fk-pessoa').val();
+                var dataNascimento = $('#data-nascimento').val();
+                var relacionamento = $('#relacionamento').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/it4cio/Dependente/Salvar',
+                    data: {
+                        nome: nome,
+                        fkPessoa: fkPessoa,
+                        dataNascimento: dataNascimento,
+                        relacionamento: relacionamento
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if(data.code == 200){
+                            console.log(data);
+                            M.toast({html: data.msg});
+                        }else{
+                            console.log(data);
+                            M.toast({html: data.msg});
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+{% endblock %}

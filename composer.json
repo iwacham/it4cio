@@ -1,0 +1,13 @@
+{
+    "name":"it4cio",
+    "autoload": {
+        "psr-4": {
+            "App\\itacio\\" : "src/"
+        }
+    },
+    "require": {
+        "silex/silex": "^2.3",
+        "twig/twig": "^2.5",
+        "twig/extensions": "^1.5"
+    }
+}

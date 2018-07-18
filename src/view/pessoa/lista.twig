@@ -1,0 +1,89 @@
+{% extends 'template.twig' %}
+
+{% block content %}
+    <div class="container">
+        <a class="waves-effect btn green modal-trigger" href="#new-user">Adicionar</a>
+        <table class="responsive-table highlight">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Data Nascimento</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for pessoa in pessoas %}
+            <tr>
+                <td>{{ pessoa.p_nome }}</td>
+                <td>{{ pessoa.p_email }}</td>
+                <td>{{ pessoa.p_nascimento }}</td>
+                <td>
+                    <a href="/it4cio/Pessoa/{{ pessoa.p_codigo }}" class="btn blue waves-effect">Dependentes</a>
+                    <a href="/it4cio/Pessoa/Editar/{{ pessoa.p_codigo }}" class="btn green waves-effect">Editar</a>
+                    <a href="/it4cio/Pessoa/Excluir/{{ pessoa.p_codigo }}" class="btn red waves-effect">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="new-user" class="modal" style="min-height: 400px;">
+        <div class="modal-content">
+            <h4>Adicionar Pessoa</h4>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="nome" type="text" class="validate" />
+                    <label for="nome">Nome</label>
+                </div>
+                <div class="input-field col s4">
+                    <input id="data-nascimento" type="date" class="validate" />
+                    <label for="data-nascimento">Data de nascimento</label>
+                </div>
+                <div class="input-field col s4">
+                    <input id="email" type="text" class="validate" />
+                    <label for="email">Email</label>
+                </div>
+                <div class="col s12">
+                    <button id="save-pessoa" class="btn btn-large green waves-effect">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block customjs %}
+    <script>
+        $(document).ready(function(){
+            $('#save-pessoa').click(function () {
+                var nome = $('#nome').val();
+                var email = $('#email').val();
+                var dataNascimento = $('#data-nascimento').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/it4cio/Pessoa/Salvar',
+                    data: {
+                        nome: nome,
+                        email: email,
+                        dataNascimento: dataNascimento
+                    },
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if(data.code == 200){
+                            console.log(data);
+                            M.toast({html: data.msg});
+                        }else{
+                            console.log(data);
+                            M.toast({html: data.msg});
+                        }
+                    }
+                });
+
+            });
+        });
+    </script>
+{% endblock %}
