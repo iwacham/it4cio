@@ -127,13 +127,18 @@ class PessoaController
      */
     public function removePessoa(Application $app, $codigo){
 
-        $this->pessoaDao->delete($codigo);
+        $isDelete = $this->pessoaDao->delete($codigo);
 
-        $pessoas = $this->pessoaDao->findAll();
+        if($isDelete){
+            $pessoas = $this->pessoaDao->findAll();
 
-        return $app['twig']->render('/pessoa/lista.twig', [
-            'pessoas' => $pessoas
-        ]);
+            return $app['twig']->render('/pessoa/lista.twig', [
+                'pessoas' => $pessoas
+            ]);
+        }else{
+            return $app['twig']->render('/pessoa/erro.twig');
+        }
+
 
     }
 
