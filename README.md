@@ -11,4 +11,4 @@ a única tabela que precisa ser populada para que o sistema rode é a: relacao_p
 Banco de dados utilizado: Postgres 10.
 
 Projeto no github: https://github.com/iwacham/it4cio
-Link do sistema: http://35.237.219.46/it4cio/
+Link do sistema: http://35.237.121.232/it4cio/
